@@ -1,10 +1,14 @@
 import express from "express";
-import { registerCandidate, loginCandidate } from "../controllers/candidateController.js";
+import { registerUser, loginUser } from "../services/userService.js";
+import { employerOnly } from "../middlewares/authMiddleeware.js";
+
 
 const router = express.Router();
 
-//AUTH Routes
-router.post("/register", registerCandidate);
-router.post("/login", loginCandidate);
+//registration for employers
+router.post("/register", employerOnly, registerUser);
+
+// login route for employers
+router.post("/login", employerOnly, loginUser);
 
 export default router;

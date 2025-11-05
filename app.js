@@ -24,3 +24,7 @@ app.listen(process.env.PORT , () =>{
 app.get("/", (req, res) => {
   res.send("Welcome To Job Portal.....");
 });
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => connectDatabase(),
+console.log(`Server running on port ${PORT}`));

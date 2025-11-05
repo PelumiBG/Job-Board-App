@@ -1,14 +1,12 @@
 import mongoose from 'mongoose';
 
-export const employerSchema = new mongoose.Schema({
-    employerName:{ type:String, required:true },
-    companyName:{ type:String, required:true, trim:true },
+export const adminSchema = new mongoose.Schema({
     email:{ type:String, required:true, trim:true },
-    phone:{ type:String, required:true },
-    password:{ type:String, required:true, length:[{min:5,max:8}]}
+    password:{ type:String, required:true, length:[{min:5,max:8}]},
+    role:{ type:String, required:true, enum:['User','Admin'], default:'Admin'}
 });
 
-employerSchema.pre("save", async function (next) {
+adminSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
@@ -16,17 +14,17 @@ employerSchema.pre("save", async function (next) {
 });
 
 //Password comparison before login
-employerSchema.methods.comparePassword = async function (enteredPassword) {
+adminSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
 
-employerSchema.methods.toJSON = function () {
+adminSchema.methods.toJSON = function () {
   const userObject = this.toObject();
   delete userObject.password;
   return userObject;
 };
 
-const Employer = mongoose.model("User", employerSchema);
+const Admin = mongoose.model("Admin", adminSchema);
 
-export default Employer;
+export default Admin;
