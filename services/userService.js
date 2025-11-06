@@ -1,36 +1,45 @@
 import User from "../models/user.js";
-import { validationResult } from 'express-validator';
+import bcrypt from "bcrypt";
 import  jwt from "jsonwebtoken";
+import { generateToken } from "../utils/generateToken.js";
 
-export const registerUser =  async (req, res) => {
-  try{
-    const errors = validationResult(req);
-    if(!errors.isEmpty()) return res.status(400).json({errors:errors.array()});
+export const registerUser = async (req, res) => {
+  try {
+    const { name, username, email, phone, password, account_type } = req.body;
 
-    const { name, username, email, phone, password } = req.body;
-
-    // check if account exist
+    // check if account exists
     const existingUser = await User.findOne({ email });
-    if(existingUser) {
-      return res.status(400).json({message: 'Candidate Already Exist'});
-    };
+    if (existingUser) {
+      return res.status(400).json({ message: "Candidate Already Exists" });
+    }
 
-    // create an account for each user
-    const newUser = await User.create({ name, username, email, phone, password });
+    const secPassword = await bcrypt.hash(password, 10);
 
-    newUser.save();
-    
-    res.satus(201).json({
-      id:newUser._id,
-      name:newUser.name,
-      username:newUser.username,
-      email:newUser.email,
-      phone:newUser.phone
-      });
-  } catch(err){
-    res.status(500).json({message:'Server Error' || err.message})
+    // create new user
+    const newUser = new User({ name, username, email, phone, password:secPassword, account_type });
+    await newUser.save();
+
+    // generate token
+    const token = generateToken(newUser);
+
+    // sends json response
+    res.status(201).json({
+      message:'Registered Scuccessfully',
+      user:{
+        id:newUser._id,
+        name:newUser.name,
+        username:newUser.username,
+        email:newUser.email,
+        phone:newUser.phone,
+        account_type:newUser.account_type
+      },
+      token
+    });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message || "Server Error" });
   }
- };
+};
 
  export const loginUser = async (req, res) => {
   try{

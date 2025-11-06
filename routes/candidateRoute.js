@@ -1,13 +1,13 @@
-import { registerUser, loginUser  } from '../services/userService.js';
-import { protectUser } from '../middlewares/authMiddleeware.js';
+import { registerUser, loginUser } from '../services/userService.js';
+import { protectUser } from '../middlewares/authMiddleware.js';
 import { userValidator } from '../middlewares/validationMiddleware.js';
+import { generateToken } from '../utils/generateToken.js';
 import express from 'express';
-import { loginUser, registerUser } from '../services/userService.js';
 
 const router = express.Router();
 
 // candidate register
-router.post('/register', protectUser, userValidator, registerUser);
+router.post('/register', userValidator, registerUser);
 
 // candiadate login route
 router.post('/login', userValidator, loginUser);

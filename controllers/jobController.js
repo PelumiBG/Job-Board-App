@@ -2,11 +2,13 @@ import User from '../models/user.js';
 import { validationResult } from 'express-validator';
 import Job from '../models/job.js';
 import jwt from 'jsonwebtoken';
+import { generateToken } from '../utils/generateToken.js';
+import bcrypt from 'bcryptjs';
 
 // Employers Register Route
 export const registerEmployer = async (req, res) => {
     try{
-        const { employerName, email, phone, password } = req.body;
+        const { name , username, employerName, email, phone, password } = req.body;
 
         // check if Employers account already Exist
         const existingUser = await User.findOne({ email });
@@ -15,10 +17,13 @@ export const registerEmployer = async (req, res) => {
         const hashPassword = await bcrypt.hash(password, 10)
 
         const employer = new User({
+          name,
+          username,
             employerName,
             email,
             phone,
-            password:hashPassword
+            password:hashPassword,
+            role:'Employer'
         });
 
         await employer.save();
@@ -27,10 +32,14 @@ export const registerEmployer = async (req, res) => {
             status:'SUCCESS',
             employer:{
                 id:employer._id,
+                username:employer.username,
                 employerName:employer.employerName,
                 email:employer.email,
-                phone:employer.phone
-            }
+                phone:employer.phone,
+                role:employer.role
+            },
+
+            token:generateToken(employer)
         })
     }catch(error){
         res.status(400).json({message:error.message})
@@ -44,8 +53,8 @@ export const loginEmployer = async (req, res) => {
         if(!errors.isEmpty()) return res.status(400).json({message:errors.array()});
 
         const { email, password } = req.body;
-        const employer = User.findOne({ email });
-        if(!existingUser) return res.status(403).json({status:true,message:'Account Not Registered'});
+        const employer = await User.findOne({ email });
+        if(!employer) return res.status(403).json({status:true,message:'Account Not Registered'});
 
         const isMatch = await bcrypt.compare(password, employer.password);
         if(!isMatch) return res.status(403).json({message:'Incorrect Password'});
@@ -53,7 +62,7 @@ export const loginEmployer = async (req, res) => {
         const token = jwt.sign(
             {id:employer._id, email:employer.email},
             process.env.JWT_SECRET,
-            { expiresIn: '10' }
+            { expiresIn: '10d' }
         );
 
         res.status(200).json({
@@ -62,23 +71,24 @@ export const loginEmployer = async (req, res) => {
             employer:{
                 id: employer._id,
                 name: employer.name,
-                email: employer.email
+                email: employer.email,
+                password:employer.password,
+                role:employer.role
             }
         })
     }catch(error){
-        res.status(403).json({status:false, message: error.message})
+      return res.status(403).json({status:false, message: error.message})
     }
 };
 
 // Employers can create and list Job
 export const createJob = async (req, res, next) => {
     try{
-      if(req.user.account_type !== "employer") {
-        res.status(403).json({ message: 'Only Employers allowed to Post Job'})
-      }
         const { companyName, location, description, salary, jobTitle, time, skills, employmentType } = req.body;
         
+        // Create job
         const job = await Job.create({
+          employer: req.user._id,
             companyName,
             employmentType,
             skills,
@@ -88,15 +98,14 @@ export const createJob = async (req, res, next) => {
             salary,
             time:Date
         });
-
-        await job.save();
         
         res.status(200).json({message:'Job Created Successfully', job});
     } catch(err) {
-        next()
+      return res.status(403).json({message:err.message})
     }
 };
 
+// Employers can update Job 
 export const updateJob = async (req, res, next) => {
   try {
     const updateJob = await Job.findByIdAndUpdate(req.params.id, req.body, {new: true});

@@ -2,7 +2,7 @@
 
 Seeker is a simple job portal management app that gracefully help *Employers* to List a JOB and accept applications from *Job Seekers* 
 
-## TABLES OF CONTENT
+## TABLE OF CONTENT
 - [features](#features)
 - [Technologies Used](#technologies-used)
 - [set-up instructions](#setup-instructions)
@@ -96,3 +96,14 @@ Hostify_App/
 ├── package.json                        # Project dependencies 
 └── README.md                           # Project documentation
 ```
+## How It Works
+
+1. Admin and Users can sign up and log in securely using JWT authentication
+2. Employers can list job offers and delete their own listing Job
+3. Admin can see all users/candidate
+4. Candidate/Job Seekers can apply for job and update the application status.
+
+## Latter Improvement
+
+1. Collaborate with Product Designer and Frontend to Bring to Production
+2. Admin Profile.

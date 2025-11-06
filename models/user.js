@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema(
     {
@@ -7,7 +8,7 @@ const userSchema = new mongoose.Schema(
         email:{ type:String, required:true, unique:true, lowercase:true, trim:true },
         password:{ type:String, required:true, number:true, unique:true, minlength:8},
         phone:{ type:String, required:true, number:true },
-        account_type:{ type:String, required:true, enum:['candidate','Employer']},
+        role:{ type:String, required:true, enum:['Candidate','Employer'], default:'Candidate'},
         createdAt:{ type:Date, default:Date.now }
     },
     {timestamps:true}

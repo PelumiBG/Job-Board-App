@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 export const adminSchema = new mongoose.Schema({
     email:{ type:String, required:true, trim:true },
