@@ -21,7 +21,6 @@ Seeker is a simple job portal management app that gracefully help *Employers* to
 - **Security**: bcrypt for password hashing
 - **validation**: , express-validator for input validation
 - **Testing**: Postman
-- **Deployment**: Render
 - **Environment Management**: dotenv
 
 ## Setup Instructions
@@ -29,7 +28,7 @@ Seeker is a simple job portal management app that gracefully help *Employers* to
 1. Make sure you have **Node.js** installed 
  - [download from nodejs.org](https://nodejs.org/)
 2. Install MongoDB if you haven't done that already, create an account and cluster
- - 
+ - https://www.mongodb.com/try/download/community
 3. Clone this repository 
  - git clone https://github.com/PelumiBG/Job-Board-App.git
    cd Job-Board-App
@@ -56,7 +55,7 @@ Seeker is a simple job portal management app that gracefully help *Employers* to
 ## Project Structure
 
 ```
-Hostify_App/
+Job-Board-App/
 │
 ├── src/
 │   ├── config/
@@ -88,6 +87,8 @@ Hostify_App/
 │   │
 │   ├── Services/
 │   │   └── userService.js           # handled the registration and login route
+|   |
+|   |
 |   |
 │   ├── app.js                          # Express app setup and middleware configuration(Entry Point)
 │
