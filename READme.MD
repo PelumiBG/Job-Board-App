@@ -88,7 +88,11 @@ Job-Board-App/
 │   ├── Services/
 │   │   └── userService.js           # handled the registration and login route
 |   |
+|   ├── upload/
+|   |    └── resumes          # Stores Job-Seekers files(cv,cover letter)
 |   |
+|   ├── utils/
+|   |    └── generateToke.js      # Generate token for all users
 |   |
 │   ├── app.js                          # Express app setup and middleware configuration(Entry Point)
 │

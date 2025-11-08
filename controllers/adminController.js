@@ -2,6 +2,7 @@ import Admin from '../models/admin.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { generateToken } from '../utils/generateToken.js';
+import User from '../models/user.js';
 
 
 export const registerAdmin = async (req, res) => {
@@ -45,7 +46,7 @@ export const registerAdmin = async (req, res) => {
 export const loginAdmin = async (req, res) => {
     try{
         const { email, password } = req.body;
-        const admin = Admin.findOne({ email });
+        const admin = await Admin.findOne({ email });
         if(!admin) return res.status(403).json({ status: false, message: 'Account not registered'});
 
         const isMatch = await bcrypt.compare(password, admin.password);
@@ -72,14 +73,25 @@ export const loginAdmin = async (req, res) => {
     }
 };
 
-export const getAllcandidate = async (req, res) => {
+export const getAllCandidate = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
-    res.status(200).json({ success: true, data: users });
+    if (!req.user || req.user.role !== "Admin") {
+      return res.status(403).json({ success: false, message: "Access denied, Admins only" });
+    }
+
+    const candidates = await User.find({ role: "Candidate" }).select("-password");
+
+    res.status(200).json({
+      success: true,
+      count: candidates.length,
+      data: candidates
+    });
+
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 export const deleteCandidate = async (req, res) => {
   try {

@@ -1,4 +1,4 @@
-import { deleteCandidate, getAllcandidate, loginAdmin, registerAdmin } from '../controllers/adminController.js';
+import { deleteCandidate, getAllCandidate, loginAdmin, registerAdmin } from '../controllers/adminController.js';
 import { adminOnly, protectAdmin } from '../middlewares/authMiddleware.js';
 import { adminValidator } from '../middlewares/validationMiddleware.js';
 import express from 'express';
@@ -12,7 +12,7 @@ router.post('/register',registerAdmin);
 router.post('/login', adminValidator, loginAdmin);
 
 // admin can get all candidate applied for job
-router.get('/users', protectAdmin, adminOnly, getAllcandidate);
+router.get('/users', protectAdmin, adminOnly, getAllCandidate);
 
 // admin can delete job listing
 router.delete('/users/:id', protectAdmin, adminOnly, deleteCandidate)
