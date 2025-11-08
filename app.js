@@ -27,5 +27,5 @@ app.use('/api/application', applicationRoute);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () =>
+app.listen(PORT, () => connectDatabase(),
 console.log(`Server running on port ${PORT}`));

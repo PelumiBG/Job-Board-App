@@ -5,7 +5,7 @@ export const adminSchema = new mongoose.Schema({
     email:{ type:String, required:true, trim:true },
     password:{ type:String, required:true, length:[{min:5,max:8}]},
     role:{ type:String, required:true, enum:['User','Admin'], default:'Admin'}
-});
+}, { timestamps:true });
 
 adminSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

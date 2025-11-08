@@ -103,7 +103,8 @@ Hostify_App/
 3. Admin can see all users/candidate
 4. Candidate/Job Seekers can apply for job and update the application status.
 
-## Latter Improvement
+## Later Improvement
 
 1. Collaborate with Product Designer and Frontend to Bring to Production
 2. Admin Profile.
+3. Implement Email Services to Notify Job-Seeker when there's an update on their application

@@ -53,6 +53,24 @@ export const employerOnly = (req, res, next) => {
   if (req.user && req.user.role === "Employer") {
     next();
   } else {
-    return res.status(403).json({ message: "Not authorized as an Employer" });
+    return res.status(403).json({ message: "Not Allowed Here" });
+  }
+};
+
+export const adminOnly = (req, res, next) => {
+  console.log("req.user.role:", req.user?.role);
+  if (req.user && req.user.role === "Admin") {
+    next();
+  } else {
+    return res.status(403).json({ message: "Only Admin Can access this page" });
+  }
+};
+
+export const candidateOnly = (req, res, next) => {
+  console.log("req.user.role:", req.user?.role);
+  if (req.user && req.user.role === "Candidate") {
+    next();
+  } else {
+    return res.status(403).json({ message: "Access Denied" });
   }
 };

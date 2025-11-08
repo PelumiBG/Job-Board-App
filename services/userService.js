@@ -5,7 +5,7 @@ import { generateToken } from "../utils/generateToken.js";
 
 export const registerUser = async (req, res) => {
   try {
-    const { name, username, email, phone, password, account_type } = req.body;
+    const { name, username, email, phone, password  } = req.body;
 
     // check if account exists
     const existingUser = await User.findOne({ email });
@@ -16,7 +16,7 @@ export const registerUser = async (req, res) => {
     const secPassword = await bcrypt.hash(password, 10);
 
     // create new user
-    const newUser = new User({ name, username, email, phone, password:secPassword, account_type });
+    const newUser = new User({ name, username, email, phone, password:secPassword , role:"Candidate"});
     await newUser.save();
 
     // generate token
@@ -31,7 +31,7 @@ export const registerUser = async (req, res) => {
         username:newUser.username,
         email:newUser.email,
         phone:newUser.phone,
-        account_type:newUser.account_type
+        role:newUser.role
       },
       token
     });

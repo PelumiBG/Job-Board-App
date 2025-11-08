@@ -1,14 +1,14 @@
 import { applyJob, updateApplicationStatus } from "../controllers/applicationController.js";
 import express from 'express';
-import { protectUser } from "../middlewares/authMiddleware.js";
-import { roleMiddleware } from "../controllers/authController.js";
+import { candidateOnly, employerOnly, protectUser } from "../middlewares/authMiddleware.js";
+import upload from "../middlewares/upload.js";
 
 const router = express.Router();
 
 // candidate apply for job
-router.post('/apply',protectUser, roleMiddleware, applyJob);
+router.post('/apply',protectUser, candidateOnly,upload.single('resume'), applyJob);
 
 // it allows candidate to update application
-router.put('/update/:job', protectUser, roleMiddleware, updateApplicationStatus);
+router.put('/update/:job', protectUser, employerOnly, updateApplicationStatus);
 
 export default router;

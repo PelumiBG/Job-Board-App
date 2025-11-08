@@ -1,33 +1,44 @@
 import Admin from '../models/admin.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { generateToken } from '../utils/generateToken.js';
 
 
 export const registerAdmin = async (req, res) => {
-    try {
-        const { username , email , password } = req.body;
-        if(req.user.account_type !== 'Admin') return res.status(403).json({ message: 'You Can\'t access this Page'});// 
+    try{
 
-        const existAdmin = await Admin.findOne({ email });
+      // if (!req.user || req.user.role !== "Admin") {
+      //       return res.status(403).json({ message: "You can't access this page" });
+      //   }
 
-        if(existAdmin) return res.status(400).json({ status: false, message: 'Account Already Exist '});
+        const { username, email, password } = req.body;
 
-        const secPassword = await bcrypt.hash(password, 10)
-        
-        const admin = new Admin({
-            username,
+        // check if Admin account already Exist
+        const existingUser = await Admin.findOne({ email });
+        if(existingUser) res.status(403).json({status:false, message:'Admin Already Exist'});
+
+        const hashPassword = await bcrypt.hash(password, 10)
+
+        const admin = await Admin.create({
+          username,
             email,
-            password:secPassword
+            password:hashPassword,
+            role:'Admin'
         });
-        await admin.save();
 
-        res.status(201).json({ status: true, message: 'Admin Registered Successfully'})
+        res.status(201).json({
+            status:'SUCCESS',
+            admin:{
+                id:admin._id,
+                username:admin.username,
+                email:admin.email,
+                role:admin.role
+            },
 
-    } catch(error) {
-        res.status(500).json({
-            status:false,
-            message:error.message
+            token:generateToken(admin)
         })
+    }catch(error){
+        res.status(400).json({message:error.message})
     }
 };
 
@@ -42,8 +53,9 @@ export const loginAdmin = async (req, res) => {
         if(!isMatch) return res.status(403).json({ status:false, message: 'Incorrect Password'});
 
         const token = jwt.sign(
-            {id:admin._id,email:admin.email},
-            process.env.JWT_SECRET
+            {id:admin._id,email:admin.email,role:admin.role},
+            process.env.JWT_SECRET,
+            {expiresIn:'10d'}
         );
 
         res.status(200).json({
@@ -51,6 +63,7 @@ export const loginAdmin = async (req, res) => {
             user:{
                 id:admin._id,
                 email:admin.email,
+                password,
                 token
             }
         })

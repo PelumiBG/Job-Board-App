@@ -1,7 +1,5 @@
 import { registerUser, loginUser } from '../services/userService.js';
-import { protectUser } from '../middlewares/authMiddleware.js';
 import { userValidator } from '../middlewares/validationMiddleware.js';
-import { generateToken } from '../utils/generateToken.js';
 import express from 'express';
 
 const router = express.Router();

@@ -1,4 +1,3 @@
-import { roleMiddleware } from '../controllers/authController.js';
 import { createJob , deleteJob ,loginEmployer,registerEmployer,updateJob } from '../controllers/jobController.js';
 import { employerOnly, protectUser } from '../middlewares/authMiddleware.js';
 import express from 'express';
@@ -12,7 +11,7 @@ router.post("/register", registerEmployer);
 router.post("/login", loginEmployer);
 
 // employers list job
-router.post('/post',protectUser, roleMiddleware, employerOnly, createJob);
+router.post('/post',protectUser, employerOnly, createJob);
 
 // employers upadte job
 router.put('/job/:id', employerOnly, updateJob);
