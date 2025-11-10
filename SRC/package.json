@@ -1,12 +1,13 @@
 {
   "name": "job-board",
   "version": "1.0.0",
-  "description": "",
+  "description": "A job board application backend",
   "main": "app.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon SRC/app.js"
+    "dev": "nodemon src/app.js",
+    "start": "nodemon src/app.js"
   },
   "keywords": [],
   "author": "",
