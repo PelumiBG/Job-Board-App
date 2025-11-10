@@ -10,7 +10,7 @@ export const applyJob = async (req, res) => {
     const job = await Job.findById(jobId);
     
     if(!job) return res.status(404).json({status:false,
-      message:"Application Not Found"
+      message:"Job Not Found"
     })
 
     const appliedJob = await Application.findOne({job:jobId,candidate:req.user._id});
@@ -50,7 +50,7 @@ export const updateApplicationStatus = async (req, res) => {
     }
 
     // Check if this employer owns the job
-    if (application.job.employer.toString() !== req.user._id.toString()) {
+    if (application.job.employer.toString() === req.user._id.toString()) {
       return res.status(403).json({ message: "Not Authorized to Update this Application" });
     }
 

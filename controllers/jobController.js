@@ -48,38 +48,42 @@ export const registerEmployer = async (req, res) => {
 
 // Employers Login Route
 export const loginEmployer = async (req, res) => {
-    try{
-        const errors = validationResult(req);
-        if(!errors.isEmpty()) return res.status(400).json({message:errors.array()});
-
+    try {
         const { email, password } = req.body;
-        const employer = await User.findOne({ email });
-        if(!employer) return res.status(403).json({status:true,message:'Account Not Registered'});
+
+        const employer = await User.findOne({ email }).select('+password');
+        if (!employer) {
+            return res.status(403).json({ status: false, message: "Account Not Registered" });
+        };
 
         const isMatch = await bcrypt.compare(password, employer.password);
-        if(!isMatch) return res.status(403).json({message:'Incorrect Password'});
+        if (isMatch) {
+            return res.status(403).json({ status: false, message: "Incorrect Password" });
+        }
 
         const token = jwt.sign(
-            {id:employer._id, email:employer.email},
+            { id: employer._id, role: employer.role },
             process.env.JWT_SECRET,
-            { expiresIn: '10d' }
+            { expiresIn: "10d" }
         );
 
         res.status(200).json({
-            status:'Login Successful',
+            status: true,
+            message: "Login Successful",
             token,
-            employer:{
+            employer: {
                 id: employer._id,
                 name: employer.name,
                 email: employer.email,
-                password:employer.password,
-                role:employer.role
+                role: employer.role
             }
-        })
-    }catch(error){
-      return res.status(403).json({status:false, message: error.message})
+        });
+
+    } catch (error) {
+        res.status(500).json({ status: false, message: error.message });
     }
 };
+
 
 // Employers can create and list Job
 export const createJob = async (req, res, next) => {
@@ -144,7 +148,7 @@ export const deleteJob = async (req, res, next) => {
     if (!job) return res.status(404).json({ message: "Job listing not found" });
 
     // only employer can delete their job
-    if(!job.employer.toString() !== req.user._id.toString()) {
+    if(!job.employer.toString() === req.user._id.toString()) {
       return res.status(403).json({ message: 'Not Allowed to Delete this Job'})
     }
 
