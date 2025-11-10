@@ -4,7 +4,7 @@ import Job from '../models/job.js';
 // Candidate can apply for job
 export const applyJob = async (req, res) => {
   try{
-    if(req.user.role !== 'Candidate') return res.status(400).json({ status:false, message:'Only Candidate allow to apply'})
+    if(req.user.role !== 'Candidate') return res.status(400).json({ status:false, message:'Only Candidate allowed to apply'})
     const { jobId } = req.body;
 
     const job = await Job.findById(jobId);
@@ -50,7 +50,7 @@ export const updateApplicationStatus = async (req, res) => {
     }
 
     // Check if this employer owns the job
-    if (!application.job.employer.toString() === req.user._id.toString()) {
+    if (application.job.employer.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "Not Authorized to Update this Application" });
     }
 

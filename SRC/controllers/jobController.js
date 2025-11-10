@@ -40,7 +40,7 @@ export const updateJob = async (req, res, next) => {
     }
 
     // Check if it is Employer
-    if (job.employer.toString() !== req.user._id.toString()) {
+    if (!job.employer.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "You are not authorized to update this job" });
     }
 
@@ -64,7 +64,7 @@ export const deleteJob = async (req, res, next) => {
     if (!job) return res.status(404).json({ message: "Job listing not found" });
 
     // only employer can delete their job
-    if(!job.employer.toString() === req.user._id.toString()) {
+    if(!job.employer.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not Allowed to Delete this Job'})
     }
 

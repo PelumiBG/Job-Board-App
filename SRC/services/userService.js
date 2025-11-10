@@ -1,5 +1,5 @@
 import User from "../models/user.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import  jwt from "jsonwebtoken";
 import { generateToken } from "../utils/generateToken.js";
 
@@ -44,11 +44,9 @@ export const registerUser = async (req, res) => {
     const { email, password } = req.body;
 
     // checks if candidate exist
-    const user = User.findOne({ email });
+    const user = await User.findOne({ email });
     if(!user) {
       return res.status(403).json({message:'Candidate Not Registered'})
-    } else{
-      res.status(200).json({message:'Welcome Back'});
     };
 
     // compared the input password securely
@@ -57,7 +55,7 @@ export const registerUser = async (req, res) => {
 
     // sends a jwt token
     const token = jwt.sign(
-      {id:user._id,email:user.email},
+      {id:user._id,role:user.role},
       process.env.JWT_SECRET,
       { expiresIn: '10d' }
     );
@@ -65,11 +63,12 @@ export const registerUser = async (req, res) => {
     //sends candidate info in json
     res.status(200).json({
       message:'User Logged in Successfully',
+      token,
       user:{
         id:user._id,
         name:user.name,
         email:user.email,
-        token
+        role:user.role
       }
     });
   } catch(error) {
