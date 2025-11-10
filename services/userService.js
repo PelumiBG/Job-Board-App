@@ -10,13 +10,11 @@ export const registerUser = async (req, res) => {
     // check if account exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "Candidate Already Exists" });
+      return res.status(400).json({ message: "User Already Exists" });
     }
 
-    const secPassword = await bcrypt.hash(password, 10);
-
     // create new user
-    const newUser = new User({ name, username, email, phone, password:secPassword , role:"Candidate"});
+    const newUser = new User({ name, username, email, phone, password , role:"Candidate"});
     await newUser.save();
 
     // generate token

@@ -6,13 +6,13 @@ import express from 'express';
 const router = express.Router();
 
 // admin registter
-router.post('/register',registerAdmin);
+router.post('/register',adminValidator, registerAdmin);
 
 // admin login route
 router.post('/login', adminValidator, loginAdmin);
 
 // admin can get all candidate applied for job
-router.get('/users', protectAdmin, adminOnly, getAllCandidate);
+router.get('/users/:id', protectAdmin, adminOnly, getAllCandidate);
 
 // admin can delete job listing
 router.delete('/users/:id', protectAdmin, adminOnly, deleteCandidate)

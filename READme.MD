@@ -112,4 +112,5 @@ Job-Board-App/
 
 1. Collaborate with Product Designer and Frontend to Bring to Production
 2. Admin Profile.
-3. Implement Email Services to Notify Job-Seeker when there's an update on their application
+3. Implement Email Services to Notify Job-Seeker when there's an update on their application.
+4. Add features like (Users Can update profile).

@@ -1,5 +1,5 @@
 import Admin from '../models/admin.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { generateToken } from '../utils/generateToken.js';
 import User from '../models/user.js';
@@ -8,7 +8,8 @@ import User from '../models/user.js';
 export const registerAdmin = async (req, res) => {
     try{
 
-      // if (!req.user || req.user.role !== "Admin") {
+      // Role check after the initial Admin has been created and only admin can register another
+      // if (req.user.role !== "Admin") {
       //       return res.status(403).json({ message: "You can't access this page" });
       //   }
 
@@ -18,12 +19,10 @@ export const registerAdmin = async (req, res) => {
         const existingUser = await Admin.findOne({ email });
         if(existingUser) res.status(403).json({status:false, message:'Admin Already Exist'});
 
-        const hashPassword = await bcrypt.hash(password, 10)
-
         const admin = await Admin.create({
           username,
             email,
-            password:hashPassword,
+            password,
             role:'Admin'
         });
 
@@ -46,12 +45,12 @@ export const registerAdmin = async (req, res) => {
 export const loginAdmin = async (req, res) => {
     try{
         const { email, password } = req.body;
-        const admin = await Admin.findOne({ email });
+        const admin = await Admin.findOne({ email }).select('+password');
         if(!admin) return res.status(403).json({ status: false, message: 'Account not registered'});
 
         const isMatch = await bcrypt.compare(password, admin.password);
 
-        if(!isMatch) return res.status(403).json({ status:false, message: 'Incorrect Password'});
+        if(!isMatch) return res.status(403).json({ status:false, message: 'Password Mismatch'});
 
         const token = jwt.sign(
             {id:admin._id,email:admin.email,role:admin.role},
@@ -61,10 +60,10 @@ export const loginAdmin = async (req, res) => {
 
         res.status(200).json({
             status:'Logged in Successfully',
-            user:{
+            admin:{
                 id:admin._id,
                 email:admin.email,
-                password,
+                role:admin.role,
                 token
             }
         })
@@ -75,8 +74,8 @@ export const loginAdmin = async (req, res) => {
 
 export const getAllCandidate = async (req, res) => {
   try {
-    if (!req.user || req.user.role !== "Admin") {
-      return res.status(403).json({ success: false, message: "Access denied, Admins only" });
+    if (req.user.role !== "Admin") {
+      return res.status(403).json({ success: false, message: "Unauthorized access" });
     }
 
     const candidates = await User.find({ role: "Candidate" }).select("-password");
@@ -99,17 +98,17 @@ export const deleteCandidate = async (req, res) => {
 
     //Validate ID before using it
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ success: false, message: "Invalid User ID" });
+      return res.status(400).json({ success: false, message: "Invalid Candidate ID" });
     }
 
-    const user = await Candidate.findById(id);
+    const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
     await user.deleteOne();
     res.status(200).json({ success: true, message: "User deleted successfully" });
-    console.log(`User with ID ${id} deleted.`);
+    console.log(`Candidate with ID ${id} deleted.`);
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

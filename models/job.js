@@ -4,7 +4,7 @@ export const jobSchema = new mongoose.Schema({
     employer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     companyName:{ type:String, required:true, trim:true },
     location:{ type:String, required:true, trim:true },
-    salary:{ type:Number, required:true, length:[{min:Number, max:Number}]},
+    salary:{ type:Number, required:true,minlength:8},
     jobTitle:{ type:String, required:true, trim:true },
     description:{ type:String, required:true },
     employmentType:{ type:String, enum:['Full-Time','Contract','Part-Time'], default:'Full-Time'},

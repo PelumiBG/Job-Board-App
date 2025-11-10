@@ -50,7 +50,7 @@ export const updateApplicationStatus = async (req, res) => {
     }
 
     // Check if this employer owns the job
-    if (application.job.employer.toString() === req.user._id.toString()) {
+    if (!application.job.employer.toString() === req.user._id.toString()) {
       return res.status(403).json({ message: "Not Authorized to Update this Application" });
     }
 

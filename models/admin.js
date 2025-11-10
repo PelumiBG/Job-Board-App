@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 
 export const adminSchema = new mongoose.Schema({
     email:{ type:String, required:true, trim:true },
-    password:{ type:String, required:true, length:[{min:5,max:8}]},
+    password:{ type:String, required:true, length:[{min:5,max:8}],select:false},
     role:{ type:String, required:true, enum:['User','Admin'], default:'Admin'}
 }, { timestamps:true });
 

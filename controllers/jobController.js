@@ -14,15 +14,13 @@ export const registerEmployer = async (req, res) => {
         const existingUser = await User.findOne({ email });
         if(existingUser) res.status(403).json({status:false, message:'Employer Already Exist'});
 
-        const hashPassword = await bcrypt.hash(password, 10)
-
         const employer = new User({
           name,
           username,
             employerName,
             email,
             phone,
-            password:hashPassword,
+            password,
             role:'Employer'
         });
 
@@ -51,13 +49,13 @@ export const loginEmployer = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const employer = await User.findOne({ email }).select('+password');
+        const employer = await User.findOne({ email });
         if (!employer) {
             return res.status(403).json({ status: false, message: "Account Not Registered" });
         };
 
         const isMatch = await bcrypt.compare(password, employer.password);
-        if (isMatch) {
+        if (!isMatch) {
             return res.status(403).json({ status: false, message: "Incorrect Password" });
         }
 
