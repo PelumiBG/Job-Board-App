@@ -18,7 +18,7 @@ export const createJob = async (req, res, next) => {
             time:Date
         });
         
-        res.status(200).json({message:'Job Created Successfully', job});
+        res.status(201).json({message:'Job Created Successfully', job});
     } catch(err) {
       return res.status(403).json({message:err.message})
     }

@@ -62,7 +62,6 @@ export const updateApplicationStatus = async (req, res) => {
       message: "Application Status Updated",
       application,
     });
-
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { connectDatabase } from './config/db.js';
 import { errorHandler } from './middlewares/errorHandler.js';
-import apiRoutes from './routes/candidateRoute.js';
+import candidateRoutes from './routes/candidateRoute.js';
 import adminRoutes from './routes/adminRoute.js';
 import employerRoute from './routes/jobRoute.js';
 import applicationRoute from './routes/applicationRoute.js';
@@ -18,7 +18,7 @@ app.use(express.json());
 app.get('/', (req, res) => res.send({ ok: true, message: 'WELCOME TO JOB PORTAL.....' }));
 
 // Routes
-app.use('/api/candidate', apiRoutes);
+app.use('/api/candidate', candidateRoutes); 
 app.use('/api/admin', adminRoutes);
 app.use('/api/employer', employerRoute);
 app.use('/api/application', applicationRoute);

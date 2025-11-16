@@ -15,9 +15,9 @@ router.post("/login", loginEmployer);
 router.post('/post',protectUser, employerOnly, createJob);
 
 // employers upadte job
-router.put('/:id/job', protectUser, employerOnly, updateJob);
+router.put('/job/:id', protectUser, employerOnly, updateJob);
 
 // employers delete job
-router.delete('/:id/delete', protectUser, employerOnly, deleteJob)
+router.delete('/delete/:id', protectUser, employerOnly, deleteJob)
 
 export default router;

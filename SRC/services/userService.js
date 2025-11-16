@@ -2,6 +2,7 @@ import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import  jwt from "jsonwebtoken";
 import { generateToken } from "../utils/generateToken.js";
+import { sendWelcomeEmail } from "../services/emailService.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -14,8 +15,14 @@ export const registerUser = async (req, res) => {
     }
 
     // create new user
-    const newUser = new User({ name, username, email, phone, password , role:"Candidate"});
-    await newUser.save();
+    const newUser = await User.create({ name, username, email, phone, password , role:"Candidate"});
+      
+    try {
+      await sendWelcomeEmail(newUser.email, newUser.name);
+      console.log(`Email sent to: ${newUser.email}`);
+    }catch(err){
+      res.status(403).json({message:err.message})
+    };
 
     // generate token
     const token = generateToken(newUser);
