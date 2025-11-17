@@ -1,5 +1,6 @@
 import Application from '../models/application.js';
 import Job from '../models/job.js';
+import { paginate } from '../utils/paginate.js';
 
 // Candidate can apply for job
 export const applyJob = async (req, res) => {
@@ -22,12 +23,38 @@ export const applyJob = async (req, res) => {
     const application = await Application.create({
       job: jobId,
       candidate:req.user._id,
+      email: candidate.email,
       resume:req.file.path
     });
 
     res.status(201).json({status:true, message:'Application Submitted', application})
   } catch(error){
     res.status(500).json({message :error.message});
+  }
+};
+
+// Employer get all application
+export const getAllApplication = async (req, res) => {
+  try{
+    const { page, limit, status, jobId } = req.query;
+
+    const query = {};
+
+    if(jobId) query.job = jobId;
+    if(status) query.status = {
+      $regex: status,
+      $options: 'i'
+    };
+
+    const result = await paginate(Application, query, {page, limit});
+
+    return res.status(200).json(result)
+
+  }catch(err){
+    res.status(403).json({
+      status: false || 'Can\'t connect to server',
+      message:err.message
+    })
   }
 };
 

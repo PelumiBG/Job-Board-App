@@ -86,13 +86,16 @@ Job-Board-App/
 │   │   └── jobRoute.js              # /api/post
 │   │
 │   ├── Services/
+|   |   ├── emailServices.js       # sends confirmation email after registration.
+|   |   ├── employerService.js     # controls registration and login logic for employers
 │   │   └── userService.js           # handled the registration and login route
 |   |
 |   ├── upload/
 |   |    └── resumes          # Stores Job-Seekers files(cv,cover letter)
 |   |
 |   ├── utils/
-|   |    └── generateToke.js      # Generate token for all users
+|   |    ├── generateToke.js      # Generate token for all users
+|   |    └── paginate.js         # Handled the workload of pages sent to the server at a time
 |   |
 │   ├── app.js                          # Express app setup and middleware configuration(Entry Point)
 │

@@ -2,6 +2,7 @@ import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 import jwt from "jsonwebtoken";
+import { sendWelcomeEmailEmployer } from "./emailService.js";
 
 // Employers Register Route
 export const registerEmployer = async (req, res) => {
@@ -12,7 +13,7 @@ export const registerEmployer = async (req, res) => {
         const existingUser = await User.findOne({ email });
         if(existingUser) res.status(403).json({status:false, message:'Employer Already Exist'});
 
-        const employer = new User({
+        const employer = await User.create({
           name,
           username,
             employerName,
@@ -22,7 +23,7 @@ export const registerEmployer = async (req, res) => {
             role:'Employer'
         });
 
-        await employer.save();
+        await sendWelcomeEmailEmployer(employer.email,employer.name);
 
         res.status(201).json({
             status:'SUCCESS',
