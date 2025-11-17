@@ -23,6 +23,7 @@ export const applyJob = async (req, res) => {
     const application = await Application.create({
       job: jobId,
       candidate:req.user._id,
+      name:candidate.name,
       email: candidate.email,
       resume:req.file.path
     });

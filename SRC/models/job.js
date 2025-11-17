@@ -8,8 +8,7 @@ export const jobSchema = new mongoose.Schema({
     jobTitle:{ type:String, required:true, trim:true },
     description:{ type:String, required:true },
     employmentType:{ type:String, enum:['Full-Time','Contract','Part-Time'], default:'Full-Time'},
-    skills:{ type:String, required:true, trim:true },
-    createdAt:{ type:Date, default:Date.now }
+    skills:{ type:String, required:true, trim:true }
 },  { timestamp: true });
 
 const Job = mongoose.model('Job', jobSchema);

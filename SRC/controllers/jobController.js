@@ -1,9 +1,9 @@
 import Job from '../models/job.js';
 
 // Employers can create and list Job
-export const createJob = async (req, res, next) => {
+export const createJob = async (req, res) => {
     try{
-        const { companyName, location, description, salary, jobTitle, time, skills, employmentType } = req.body;
+        const { companyName, location, description, salary, jobTitle, skills, employmentType } = req.body;
         
         // Create job
         const job = await Job.create({
@@ -26,7 +26,7 @@ export const createJob = async (req, res, next) => {
 
 
 // Employers can update Job 
-export const updateJob = async (req, res, next) => {
+export const updateJob = async (req, res) => {
   try {
     // Role Check
     if (req.user.role !== "Employer") {

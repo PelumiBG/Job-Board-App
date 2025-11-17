@@ -85,3 +85,23 @@ export const registerUser = async (req, res) => {
     });
   };
  };
+
+ export const updatePassword = async (req,res) => {
+  try{
+    const { email, password } = req.body;
+    let existUser = await User.findOne({ email });
+
+    if(!existUser){
+      return res.status(400).json({status:false, message:'email not registered'});
+    };
+
+    existUser.password = password;
+    await existUser.save();
+
+    return res.status(200).json({status:true,
+      message:"Password Reset Successfully"
+    })
+  }catch(err){
+    res.status(403).json({message:err.message})
+  }
+ }

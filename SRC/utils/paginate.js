@@ -1,6 +1,6 @@
 export const paginate = async (model,query={},options={}) => {
     let page = parseInt(options.page) || 1;
-    let limit = parseInt(options.limit) || 3;
+    let limit = parseInt(options.limit) || 10;
     let sort = options.srt || "-createdAt";
 
     const skip = (page - 1) * limit;

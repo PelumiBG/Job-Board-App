@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { generateToken } from '../utils/generateToken.js';
 import User from '../models/user.js';
 import mongoose from 'mongoose';
+import { paginate } from '../utils/paginate.js';
 
 
 export const registerAdmin = async (req, res) => {
@@ -73,19 +74,27 @@ export const loginAdmin = async (req, res) => {
     }
 };
 
-export const getAllCandidate = async (req, res) => {
+export const getAllUser = async (req, res) => {
   try {
-    if (req.user.role !== "Admin") {
-      return res.status(403).json({ success: false, message: "Unauthorized access" });
-    }
+    if (req.user.role !== 'Admin') return res.status(400).json({message:'Please Login as an admin'});
 
-    const candidates = await User.find({ role: "Candidate" }).select("-password");
+    const { page, limit, search } = req.query;
+    const query = {};
 
-    res.status(200).json({
-      success: true,
-      count: candidates.length,
-      data: candidates
-    });
+    if(search) {
+      query.$or = [
+        {name: {$regex: search, $options:'i'}},
+        {email: {$regex: search, $options:'i'}}
+      ]
+    };
+
+    const result = await paginate(User, query, {page, limit});
+
+    return res.status(200).json({
+      status: true,
+      users:result.data.length,
+      result
+    })
 
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -93,13 +102,13 @@ export const getAllCandidate = async (req, res) => {
 };
 
 
-export const deleteCandidate = async (req, res) => {
+export const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
     //Validate ID before using it
     if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ success: false, message: "Invalid Candidate ID" });
+      return res.status(400).json({ success: false, message: "Invalid ID" });
     }
 
     const user = await User.findById(id);
