@@ -19,7 +19,6 @@ export const registerUser = async (req, res) => {
       
     try {
       await sendWelcomeEmailCandidate(newUser.email, newUser.name);
-      console.log(`Email sent to: ${newUser.email}`);
     }catch(err){
       res.status(403).json({message:err.message})
     };

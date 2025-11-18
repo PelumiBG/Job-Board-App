@@ -34,6 +34,29 @@ export const applyJob = async (req, res) => {
   }
 };
 
+// candidate checks their application status
+export const applicationStatus = async (req,res) => {
+  try{
+    const {jobId } = req.body;
+    const candidateId = req.user.id
+    const existJob = await Job.findById(jobId);
+
+     if(!existJob) return res.status(200).json({status:true,message:'Job not Found'});
+
+     const applications = await Application.find({candidate: candidateId, job: jobId});
+
+     if(!applications.length) return res.status(404).json({message:'Application Not Found'});
+
+     res.status(200).json({
+      status:true,
+      message:'This Is Your Application Status',
+      data: applications
+     })
+  }catch(err){
+    res.status(400).json({message:err.message})
+  }
+}
+
 // Employer get all application
 export const getAllApplication = async (req, res) => {
   try{
