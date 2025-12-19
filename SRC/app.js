@@ -6,9 +6,11 @@ import candidateRoutes from './routes/candidateRoute.js';
 import adminRoutes from './routes/adminRoute.js';
 import employerRoute from './routes/jobRoute.js';
 import applicationRoute from './routes/applicationRoute.js';
+import { registerAdmin } from './controllers/adminController.js';
 
 dotenv.config();
 await connectDatabase();
+await registerAdmin();
 
 const app = express();
 

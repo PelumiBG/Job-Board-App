@@ -7,40 +7,26 @@ import mongoose from 'mongoose';
 import { paginate } from '../utils/paginate.js';
 
 
-export const registerAdmin = async (req, res) => {
+export const registerAdmin = async () => {
     try{
-
-      // Role check after the initial Admin has been created and only admin can register another
-      // if (req.user.role !== "Admin") {
-      //       return res.status(403).json({ message: "You can't access this page" });
-      //   }
-
-        const { username, email, password } = req.body;
-
         // check if Admin account already Exist
-        const existingUser = await Admin.findOne({ email });
-        if(existingUser) res.status(403).json({status:false, message:'Admin Already Exist'});
+        const existingUser = await Admin.findOne({ email: "johndoe@yahoo.com" });
+        if(existingUser) return console.log({status:false, message:'Admin Already Exist'});
 
         const admin = await Admin.create({
-          username,
-            email,
-            password,
-            role:'Admin'
+          name: "John Doe",
+          email: "johndoe@yahoo.com",
+          password: "John124",
+          role:'Admin'
         });
-
-        res.status(201).json({
+        
+        return console.log({
             status:'SUCCESS',
-            admin:{
-                id:admin._id,
-                username:admin.username,
-                email:admin.email,
-                role:admin.role
-            },
-
+            admin,
             token:generateToken(admin)
         })
     }catch(error){
-        res.status(400).json({message:error.message})
+        console.error({message:error.message})
     }
 };
 
@@ -93,7 +79,7 @@ export const getAllUser = async (req, res) => {
     return res.status(200).json({
       status: true,
       users:result.data.length,
-      result
+      ...result
     })
 
   } catch (error) {
