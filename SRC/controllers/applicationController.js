@@ -72,7 +72,7 @@ export const getAllApplication = async (req, res) => {
 
     const result = await paginate(Application, query, {page, limit});
 
-    return res.status(200).json(result)
+    return res.status(200).json(...result)
 
   }catch(err){
     res.status(403).json({

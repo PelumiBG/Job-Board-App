@@ -69,8 +69,7 @@ Job-Board-App/
 │   │
 │   ├── Middleware/
 │   │   ├── authMiddleware.js          # JWT verification and admin protection
-│   │   ├── errorHandler.js      # Centralized error handling
-│   │   └── validatorMiddleware.js     # Input validation (express-validator)
+│   │   └── errorHandler.js      # Centralized error handling
 │   │
 │   ├── Models/
 │   │   ├── admin.js               # Admin schema
@@ -97,6 +96,10 @@ Job-Board-App/
 |   |    ├── generateToke.js      # Generate token for all users
 |   |    └── paginate.js         # Handled the workload of pages sent to the server at a time
 |   |
+|   ├── validator/
+|   |    ├── adminValidator.js       # validate admin input
+|   |    └── userValidator.js         # validate user input
+|   |  
 │   ├── app.js                          # Express app setup and middleware configuration(Entry Point)
 │
 ├── .env                                # Environment variables

@@ -1,5 +1,5 @@
 import { registerUser, loginUser, updatePassword } from '../services/userService.js';
-import { userValidator } from '../middlewares/validationMiddleware.js';
+import { userValidator } from '../validator/userValidator.js';
 import express from 'express';
 import { candidateOnly, protectUser } from '../middlewares/authMiddleware.js';
 

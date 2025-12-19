@@ -10,7 +10,7 @@
     "start": "nodemon src/app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Pelumi Bello",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^3.1.10"

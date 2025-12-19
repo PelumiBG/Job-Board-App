@@ -40,7 +40,7 @@ export const updateJob = async (req, res) => {
     }
 
     // Check if it is Employer
-    if (!job.employer.toString() !== req.user._id.toString()) {
+    if (job.employer.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: "You are not authorized to update this job" });
     }
 
@@ -49,7 +49,7 @@ export const updateJob = async (req, res) => {
 
     res.status(200).json({
       message: "Job has been updated successfully",
-      job: updatedJob
+      updatedJob
     });
 
   } catch (err) {

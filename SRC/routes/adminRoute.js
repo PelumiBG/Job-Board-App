@@ -1,6 +1,6 @@
 import { deleteUser, getAllUser, loginAdmin, registerAdmin } from '../controllers/adminController.js';
 import { adminOnly, protectAdmin } from '../middlewares/authMiddleware.js';
-import { adminValidator } from '../middlewares/validationMiddleware.js';
+import { adminValidator } from '../validator/adminValidator.js';
 import express from 'express';
 import { updatePassword } from '../services/userService.js';
 
