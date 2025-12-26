@@ -11,8 +11,7 @@ export const registerAdmin = async () => {
     try{
         // check if Admin account already Exist
         const existingUser = await Admin.findOne({ email: "johndoe@yahoo.com" });
-        if(existingUser) return console.log({status:false, message:'Admin Already Exist'});
-
+        if(existingUser) return existingUser;
         const admin = await Admin.create({
           name: "John Doe",
           email: "johndoe@yahoo.com",
